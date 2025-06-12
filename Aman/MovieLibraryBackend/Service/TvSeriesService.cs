@@ -6,7 +6,6 @@ using MovieLibraryApi.Model;
 using MovieLibraryApi.Model.Dtos;
 using MovieLibraryApi.Persistence.Data;
 using MovieLibraryApi.Persistence.Entities;
-using System.Text.Json;
 
 namespace MovieLibraryApi.Service;
 
@@ -97,22 +96,26 @@ public class TvSeriesService(AppDbContext dbContext,
 	#region Trailer
 	public async Task<ResponseModel> GetTvShowTrailerAsync(int tvId)
 	{
-		try
-		{
-			var json = await commonService.GetMediaTrailerAsync("tv", tvId);
-			var trailerResponse = JsonSerializer.Deserialize<TmdbTrailerResponse>(json);
+		var response = await commonService.HandleTmdbApiCallAsync<TmdbTrailerResponse>(
+			() => commonService.GetMediaTrailerAsync("tv", tvId),
+			"Trailer fetched successfully.",
+			"Failed to fetch Trailer.");
 
+		if (response.data != null)
+		{
+			var trailerResponse = response.data as TmdbTrailerResponse;
 			var trailerObject = trailerResponse?.Results?
-				.FirstOrDefault(x =>
-				string.Equals(x.Name, "Official Trailer", StringComparison.OrdinalIgnoreCase) &&
-				string.Equals(x.Site, "Youtube", StringComparison.OrdinalIgnoreCase));
+					.FirstOrDefault(x =>
+					string.Equals(x.Name, "Official Trailer", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Site, "Youtube", StringComparison.OrdinalIgnoreCase));
 
-			return ResponseModel.Success("Trailer fetched successfully.", trailerObject);
+			response.data = trailerObject;
+
+			return response;
 		}
-		catch (Exception ex)
+		else
 		{
-			Console.WriteLine($"Exception in GetMovieTrailer: {ex}");
-			return ResponseModel.Fail("Failed to fetch trailer.", ex.Message);
+			return response;
 		}
 	}
 	#endregion Trailer
@@ -120,34 +123,20 @@ public class TvSeriesService(AppDbContext dbContext,
 	#region Genre
 	public async Task<ResponseModel> GetGenreOfTvShowAsync()
 	{
-		try
-		{
-			var json = await commonService.GetMediaGenresAsync("tv");
-			var imagesObject = JsonSerializer.Deserialize<object>(json);
-			return ResponseModel.Success("Genres fetched successfully.", imagesObject);
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Exception in GetImagesOfMovie: {ex}");
-			return ResponseModel.Fail("Failed to fetch genres.", ex.Message);
-		}
+		return await commonService.HandleTmdbApiCallAsync<object>(
+			() => commonService.GetMediaGenresAsync("tv"),
+			"Genres fetched successfully.",
+			"Failed to fetch genres.");
 	}
 	#endregion Genre
 
 	#region Sort
 	public async Task<ResponseModel> GetSortTvShowAsync(string sortBy, int pageNumber)
 	{
-		try
-		{
-			var json = await commonService.GetSortMediaAsync("movie", sortBy, pageNumber);
-			var sotMovieObject = JsonSerializer.Deserialize<object>(json);
-			return ResponseModel.Success("Sorted movies fetched successfully.", sotMovieObject);
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Exception in GetSortMovies: {ex}");
-			return ResponseModel.Fail("Failed to fetch sorted movies.", ex.Message);
-		}
+		return await commonService.HandleTmdbApiCallAsync<object>(
+			() => commonService.GetSortMediaAsync("tv", sortBy, pageNumber),
+			"Sorted tv show fetched successfully.",
+			"Failed to fetch sorted tv show.");
 	}
 	#endregion Sort
 }

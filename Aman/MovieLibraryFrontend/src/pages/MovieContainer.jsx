@@ -63,7 +63,7 @@ const MovieContainer = () => {
           setError(response?.data?.data?.status_message) 
         }
       } else {
-        const message = response?.response?.data?.message;
+        const message = response?.response?.data?.errorDetails;
         setError(message || "Failed to fetch data.")
         setMediaList([]);
         setNoResults(false);

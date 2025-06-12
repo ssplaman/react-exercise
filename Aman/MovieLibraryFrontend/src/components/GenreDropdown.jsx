@@ -17,10 +17,12 @@ const GenreDropdown = ({ mediaType, disabled }) => {
             const response = await fetchGenreListOfMedia(mediaType);
 
             if (response?.status === 200) {
-                setGenres(response.data.genres);
+                // setGenres(response.data.genres);
+                setGenres(response.data.data.genres);
                 setFetchError('');
             } else {
-                const message = response?.response?.data?.status_message || 'Unexpected error occurred.';
+                // const message = response?.response?.data?.status_message || 'Unexpected error occurred.';
+                const message = response?.response?.data?.errorDetails || 'Unexpected error occurred.';
                 setGenres([]);
                 setFetchError(message);
             }

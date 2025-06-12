@@ -97,6 +97,6 @@ public interface ICommonService
 	/// <param name="failMessage">The message to include in the response if the API call fails.</param>
 	/// <param name="customDeserializer">An optional function to deserialize the JSON response to the specified type <typeparamref name="T"/>.</param>
 	/// <returns>A <see cref="ResponseModel"/> indicating the success or failure of the operation, including the deserialized data if successful.</returns>
-	Task<ResponseModel> HandleTmdbApiCallAsync<T>(Func<Task<string>> apiCall, string successMessage, string failMessage, Func<string, T>? customDeserializer = null);
+	Task<ResponseModel> HandleTmdbApiCallAsync<T>(Func<Task<string>> apiCall, string successMessage, string failMessage);
 	#endregion TMDB API Call
 }

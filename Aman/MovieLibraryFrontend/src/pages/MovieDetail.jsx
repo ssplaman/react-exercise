@@ -31,8 +31,10 @@ const MovieDetail = () => {
         setIsLoading(true);
 
         const response = await fetchMediaDetail(mediaType, movieId);
-        if (response.status === 200 && response.data) {
-            setMediaDetail(response.data);
+        // if (response.status === 200 && response.data) {
+        if (response.status === 200 && response.data.data) {
+            // setMediaDetail(response.data);
+            setMediaDetail(response.data.data);
             setIsMediaFound(true);
         } else {
             setIsMediaFound(false);
@@ -44,14 +46,19 @@ const MovieDetail = () => {
 
     const fetchTrailer = async (mediaType, movieId) => {
         const response = await fetchMediaTrailer(mediaType, movieId);
-        if (response.status === 200 && response.data) {
-            const videos = response.data.results || [];
-            const officialTrailer = videos.find(
-                (video) => video.name === "Official Trailer" && video.site === "YouTube"
-            );
-
-            if (officialTrailer) {
-                setTrailerUrl(`https://www.youtube.com/watch?v=${officialTrailer.key}`);
+        // if (response.status === 200 && response.data) {
+        if (response.status === 200 && response.data.data) {
+            // const videos = response.data.results || [];
+            // const officialTrailer = videos.find(
+            //     (video) => video.name === "Official Trailer" && video.site === "YouTube"
+            // );
+            
+            // if (officialTrailer) {
+            //     setTrailerUrl(`https://www.youtube.com/watch?v=${officialTrailer.key}`);
+            // }
+            const videos = response.data.data || [];
+            if(videos.key){
+                setTrailerUrl(`https://www.youtube.com/watch?v=${videos.key}`);
             }
         } else {
             console.error("Failed to fetch trailer");

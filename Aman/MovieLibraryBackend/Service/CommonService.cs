@@ -107,12 +107,16 @@ public class CommonService(IConfiguration configuration,
 	#endregion Media Sorting
 
 	#region TMDB API Call
-	public async Task<ResponseModel> HandleTmdbApiCallAsync<T>(Func<Task<string>> apiCall, string successMessage, string failMessage, Func<string, T>? customDeserializer = null)
+	public async Task<ResponseModel> HandleTmdbApiCallAsync<T>(Func<Task<string>> apiCall, string successMessage, string failMessage)
 	{
 		try
 		{
 			var json = await apiCall();
-			var data = customDeserializer != null ? customDeserializer(json) : JsonSerializer.Deserialize<T>(json);
+
+			if(!IsValidJson(json))
+				return ResponseModel.Fail(failMessage, json);
+
+			var data = JsonSerializer.Deserialize<T>(json);
 
 			return ResponseModel.Success(successMessage, data);
 		}
@@ -127,13 +131,39 @@ public class CommonService(IConfiguration configuration,
 	#region Private Method
 	private async Task<string> ExecuteTmdbRequestAsync(string endpoint, Method method)
 	{
-		var client = new RestClient("https://api.themoviedb.org/3/");
-		var request = new RestRequest(endpoint, method);
-		request.AddHeader("Authorization", $"Bearer {_bearerToken}");
+		try
+		{
+			var client = new RestClient("https://api.themoviedb.org/3/");
+			var request = new RestRequest(endpoint, method);
+			request.AddHeader("Authorization", $"Bearer {_bearerToken}");
 
-		var response = await client.ExecuteAsync(request);
+			var response = await client.ExecuteAsync(request);
 
-		return response.Content ?? string.Empty;
+			return response.Content ?? response.ErrorMessage ?? string.Empty;
+		}
+		catch (Exception ex)
+		{
+			return ex.Message;
+		}
+	}
+
+	private static bool IsValidJson(string input)
+	{
+		input = input.Trim();
+		if((input.StartsWith("{") && input.EndsWith("}")) ||
+			(input.StartsWith("[") && input.EndsWith("]")))
+		{
+			try
+			{
+				JsonDocument.Parse(input);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		return false;
 	}
 	#endregion Private Method
 }

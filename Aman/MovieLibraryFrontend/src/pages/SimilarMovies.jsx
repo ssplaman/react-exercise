@@ -29,10 +29,13 @@ const SimilarMovies = () => {
         const response = await fetchSimilarMediaList(mediaType, movieId, pageNumber);
         
         if (response.status === 200) {
-            setSimilarMovies(response.data.results);
-            setTotalPage(response.data.total_pages);
+            // setSimilarMovies(response.data.results);
+            // setTotalPage(response.data.total_pages);
+            setSimilarMovies(response.data.data.results);
+            setTotalPage(response.data.data.total_pages);
         } else if (response.status === 400) {
-            const message = response?.response?.data?.status_message || "Unexpected error occurred.";
+            // const message = response?.response?.data?.status_message || "Unexpected error occurred.";
+            const message = response?.response?.data?.errorDetails || "Unexpected error occurred.";
             setSimilarMovies([]);
             setFetchError(message)
         } else {

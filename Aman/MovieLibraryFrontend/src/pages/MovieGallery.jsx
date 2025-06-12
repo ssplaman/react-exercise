@@ -24,7 +24,7 @@ const MovieGallery = () => {
 
         const response = await fetchMediaImages(mediaType, movieId)
         if (response.status === 200) {
-            setGalleryImages(response?.data?.posters);
+            setGalleryImages(response?.data?.data?.posters);
         } else {
             setGalleryImages([]);
         }
