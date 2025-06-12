@@ -113,7 +113,7 @@ public class CommonService(IConfiguration configuration,
 		{
 			var json = await apiCall();
 
-			if(!IsValidJson(json))
+			if (!IsValidJson(json))
 				return ResponseModel.Fail(failMessage, json);
 
 			var data = JsonSerializer.Deserialize<T>(json);
@@ -133,6 +133,7 @@ public class CommonService(IConfiguration configuration,
 	{
 		try
 		{
+
 			var client = new RestClient("https://api.themoviedb.org/3/");
 			var request = new RestRequest(endpoint, method);
 			request.AddHeader("Authorization", $"Bearer {_bearerToken}");
@@ -150,7 +151,7 @@ public class CommonService(IConfiguration configuration,
 	private static bool IsValidJson(string input)
 	{
 		input = input.Trim();
-		if((input.StartsWith("{") && input.EndsWith("}")) ||
+		if ((input.StartsWith("{") && input.EndsWith("}")) ||
 			(input.StartsWith("[") && input.EndsWith("]")))
 		{
 			try
