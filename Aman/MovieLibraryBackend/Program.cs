@@ -14,34 +14,36 @@ if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("Con
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+	options.UseSqlServer(connectionString);
 });
 
 // Register Servie & Interface
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ITvSeriesService, TvSeriesService>();
+builder.Services.AddScoped<ICommonService, CommonService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddHttpClient();
 
 // Add CORS
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(corsPolicyName,
-        policy =>
-        {
-            policy.WithOrigins(allowedOrigins!)
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+	options.AddPolicy(corsPolicyName,
+		policy =>
+		{
+			policy.WithOrigins(allowedOrigins!)
+				  .AllowAnyHeader()
+				  .AllowAnyMethod();
+		});
 });
-
 
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); 
+builder.Services.AddSwaggerGen();
 
 // Enable console logging
 builder.Logging.ClearProviders();
@@ -59,8 +61,8 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

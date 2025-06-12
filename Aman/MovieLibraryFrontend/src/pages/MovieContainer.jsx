@@ -41,12 +41,29 @@ const MovieContainer = () => {
         response = await fetchMediaList(mediaType, currentPage, selectedGenreId);
       }
 
+      // if (response?.status === 200) {
+      //   setMediaList(response.data.results || []);
+      //   setTotalPage(response.data.total_pages || 0);
+      //   setNoResults(!response.data.results.length);
+      // } else {
+      //   const message = response?.response?.data?.status_message;
+      //   setError(message || "Failed to fetch data.")
+      //   setMediaList([]);
+      //   setNoResults(false);
+      // }
+
       if (response?.status === 200) {
-        setMediaList(response.data.results || []);
-        setTotalPage(response.data.total_pages || 0);
-        setNoResults(!response.data.results.length);
+        if (response.data.data.results.length > 0) {
+          setMediaList(response.data.data.results || []);
+          setTotalPage(response.data.data.total_pages || 0);
+          setNoResults(!response.data.data.results.length);
+        } else {
+          setMediaList([]);
+          setNoResults(false);
+          setError(response?.data?.data?.status_message) 
+        }
       } else {
-        const message = response?.response?.data?.status_message;
+        const message = response?.response?.data?.message;
         setError(message || "Failed to fetch data.")
         setMediaList([]);
         setNoResults(false);

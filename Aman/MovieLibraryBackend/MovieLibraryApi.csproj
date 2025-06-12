@@ -26,6 +26,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NPoco" Version="5.7.1" />
 		<PackageReference Include="NPoco.SqlServer" Version="5.7.1" />
+		<PackageReference Include="RestSharp" Version="112.1.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 	</ItemGroup>
 
@@ -55,9 +56,7 @@
 			<DistFiles Include="$(SpaRoot)\dist\**\*" />
 		</ItemGroup>
 
-		<Copy SourceFiles="@(DistFiles)"
-			  DestinationFolder="$(ProjectDir)wwwroot\%(RecursiveDir)"
-			  SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(DistFiles)" DestinationFolder="$(ProjectDir)wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
 	</Target>
 
 

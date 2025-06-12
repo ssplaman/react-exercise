@@ -2,22 +2,47 @@ import axios from "axios";
 import { config } from "./utils/axiosConfig";
 import { envVar } from "./utils/env-var";
 
+// export const fetchMediaList = async (mediaType = "movie", page = 1, genreId = null) => {
+//     try {
+//         const genreParam = genreId ? `&with_genres=${genreId}` : "";
+//         const response = await axios.get(
+//             `${envVar.tmdbApi.baseUrl}/3/discover/${mediaType}?language=${envVar.tmdbApi.language}&page=${page}${genreParam}`,
+//             config);
+//         return response;
+//     } catch (error) {
+//         return error;
+//     }
+// }
+
 export const fetchMediaList = async (mediaType = "movie", page = 1, genreId = null) => {
     try {
-        const genreParam = genreId ? `&with_genres=${genreId}` : "";
-        const response = await axios.get(
-            `${envVar.tmdbApi.baseUrl}/3/discover/${mediaType}?language=${envVar.tmdbApi.language}&page=${page}${genreParam}`,
-            config);
+        let apiRoute = `${envVar.reviewApi.baseUrl}/${mediaType}/list`
+        const param = genreId ? `?genreId=${genreId}&pageNumber=${page}` : `?pageNumber=${page}`;
+
+        apiRoute = apiRoute.concat(param);
+        const response = await axios.get(apiRoute);
         return response;
     } catch (error) {
         return error;
     }
 }
 
+// export const searchMediaList = async (mediaType = "movie", query, page) => {
+//     try {
+//         const response = await axios.get(
+//             `${envVar.tmdbApi.baseUrl}/3/search/${mediaType}?query=${query}&language=${envVar.tmdbApi.language}&page=${page}`,
+//             config
+//         );
+//         return response;
+//     } catch (error) {
+//         return error;
+//     }
+// }
+
 export const searchMediaList = async (mediaType = "movie", query, page) => {
     try {
         const response = await axios.get(
-            `${envVar.tmdbApi.baseUrl}/3/search/${mediaType}?query=${query}&language=${envVar.tmdbApi.language}&page=${page}`,
+            `${envVar.reviewApi.baseUrl}/${mediaType}/${query}/search?page=${page}`,
             config
         );
         return response;
