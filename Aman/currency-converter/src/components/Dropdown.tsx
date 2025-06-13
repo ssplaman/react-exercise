@@ -1,3 +1,5 @@
+import React from "react";
+
 type CountryCurrency = {
     code: string;
     name: string;

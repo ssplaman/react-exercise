@@ -1,3 +1,5 @@
+import React from "react";
+
 interface AmountInputProps {
     amount: number;
     setAmount: (amount: number) => void;

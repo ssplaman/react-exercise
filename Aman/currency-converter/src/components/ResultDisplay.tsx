@@ -1,3 +1,5 @@
+import React from "react";
+
 interface ResultDisplayProps {
     result: string;
 }
