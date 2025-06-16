@@ -16,7 +16,7 @@ const ExchangeGraphCanvas: React.FC<ExchangeGraphCanvasProps> = ({ dataPoints, b
     const options = {
         animationEnabled: true,
         title: {
-            text: `Exchange Rate: ${base} to ${target} 30`,
+            text: `Exchange Rate: ${base} to ${target} of 30 days `,
         },
         axisX: {
             valueFormatString: "DD MMM YYYY",

@@ -12,22 +12,7 @@ import AmountInput from './components/AmountInput'
 
 import type { RootState } from './redux/store';
 import { setAmount, setFromCurrency, setToCurrency, addToHistory } from './redux/slices/currencySlice';
-
-type CountryCurrency = {
-    code: string;
-    name: string;
-}
-
-type DataPoint = {
-    x: Date;
-    y: number;
-}
-
-const config = {
-    headers: {
-        Authorization: `Token ${import.meta.env.VITE_CURRENCY_API_KEY}`,
-    }
-};
+import { config, rapidApiConfig, type CountryCurrency, type DataPoint } from './utils/config'
 
 const CurrencyConverter = () => {
     const dispatch = useDispatch();
@@ -38,6 +23,7 @@ const CurrencyConverter = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [dataPoints, setDataPoints] = useState<DataPoint[]>([]);
     const [isGraphLoading, setIsGraphLoading] = useState(true);
+    const [error, setError] = useState('');
 
     const convertCurrency = async () => {
         setIsLoading(true);
@@ -85,6 +71,8 @@ const CurrencyConverter = () => {
 
     const fetchHistoricalData = async () => {
         setIsGraphLoading(true);
+        setError('');
+
         const days = 30;
         const end = new Date();
         const start = new Date();
@@ -95,23 +83,33 @@ const CurrencyConverter = () => {
         const endDate = formatDate(end);
 
         try {
-            const response = await axios.get(`${import.meta.env.VITE_History_CURRENCY_BASE_URL}/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`);
+            const response = await axios.get(`${import.meta.env.VITE_HISTORY_CURRENCY_BASE_URL}/timeseries?start_date=${startDate}&end_date=${endDate}&base=${fromCurrency}&symbols=${toCurrency}`,
+                rapidApiConfig
+            );
 
             const rates = response.data.rates;
 
-            const points: DataPoint[] = Object.entries(rates).map(([date, rateObj]) => {
-                const rate = (rateObj as Record<string, number>)[toCurrency];
-                return {
-                    x: new Date(date),
-                    y: parseFloat(rate.toFixed(4)),
-                };
-            });
+            const points: DataPoint[] = Object.entries(rates)
+                .map(([date, rateObj]) => {
+                    const rate = (rateObj as Record<string, number>)[toCurrency];
+                    if (!rate) return null;
+                    return {
+                        x: new Date(date),
+                        y: parseFloat(rate.toFixed(4)),
+                    };
+                })
+                .filter((point): point is DataPoint => point !== null);
 
             points.sort((a, b) => a.x.getTime() - b.x.getTime());
 
             setDataPoints(points);
         } catch (error) {
             console.error("Error fetching historical data:", error);
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("An unknown error occurred.");
+            }
             setDataPoints([]);
         } finally {
             setIsGraphLoading(false);
@@ -164,7 +162,7 @@ const CurrencyConverter = () => {
             return dispatch(setAmount(0));
         }
         return dispatch(setAmount(val));
-    }
+    };
 
     return (
         <div className="converter">
@@ -194,12 +192,15 @@ const CurrencyConverter = () => {
                 <HistoryList history={history} />
             )}
 
-            {!isGraphLoading && dataPoints.length > 0 &&
+            {(!isGraphLoading && dataPoints.length > 0) ?
                 <ExchangeGraphCanvas
                     dataPoints={dataPoints}
                     base={fromCurrency}
-                    target={toCurrency}
-                />}
+                    target={toCurrency} />
+                : error &&
+                <div className="mt-4">
+                    <h4>Error fetching historical data: {error}</h4>
+                </div>}
         </div>
     )
 }

@@ -8,6 +8,7 @@ export default defineConfig({
     emptyOutDir: true
   },
   server: {
+    open: true,
     port: 5173,
     strictPort: true,
     proxy: {

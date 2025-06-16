@@ -29,7 +29,7 @@ const Header = ({ searchTerm, onSearch,
                         placeholder="Search..."
                         onChange={(e) => setInput(e.target.value)}
                         disabled={isSearchDisabled}
-                        value={searchTerm} />
+                        value={input} />
                     <button type="submit" disabled={isSearchDisabled}>Search</button>
                 </form>
 

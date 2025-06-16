@@ -13,6 +13,7 @@ A modern currency converter built with **React**, **TypeScript**, **Redux**, and
 - **Convert Button:** Click to perform the conversion using live rates.
 - **Result Display:** The conversion result is shown below the button.
 - **Conversion History:** Every conversion is saved and displayed in a history list, with the most recent conversion at the top.
+- **Historical Chart:** A line chart shows the exchange rate trend for the past 30 days based on the selected currency pair.
 
 ## Technologies Used
 
@@ -21,6 +22,7 @@ A modern currency converter built with **React**, **TypeScript**, **Redux**, and
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Vite](https://vitejs.dev/) (for fast development)
 - [Axios](https://axios-http.com/) (for API requests)
+- [Chart.js](https://www.chartjs.org/) or [Recharts](https://recharts.org/) (used for rendering the historical graph)
 
 ## Getting Started
 
@@ -33,7 +35,8 @@ A modern currency converter built with **React**, **TypeScript**, **Redux**, and
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-username/currency-converter.git
+   git clone https://github.com/ssplaman/react-exercise.git
+   change branch to feature/aman
    cd currency-converter
    ```
 
@@ -64,6 +67,8 @@ src/
     store.ts             # Redux store setup
     slices/
       currencySlice.ts   # Currency conversion state and reducers
+  utlis/
+    config.ts             # Configuration for API calling
 public/
   vite.svg               # Static assets
 ```
@@ -79,8 +84,11 @@ public/
 3. **Convert:**  
    Click the "Convert" button. The app fetches the latest exchange rate and displays the result below the button.
 
-4. **View History:**  
+4. **Conversion History:**  
    Each conversion is added to the history list, so you can see all your previous conversions.
+
+4. **View Historical Graph:**  
+   A 30-day line chart is displayed below the result, showing how the exchange rate changed over time between the selected currencies.
 
 ## Default Values
 
@@ -90,16 +98,27 @@ public/
 
 ## API
 
+### Live Conversion
+
 - Uses [Open Exchange Rates API](https://openexchangerates.org/) for real-time currency rates.
-- **API Key Required:**  
-  You must create a `.env` file in the project root with your API credentials:
+- **API Key Required:**
+You must create a `.env` file in the project root with your API credentials:
+```env
+VITE_OXR_BASE_URL=https://openexchangerates.org/api
+VITE_OXR_API_KEY=your_openexchangerates_api_key
+```
+Replace `your_openexchangerates_api_key` with your actual API key from Open Exchange Rates.
 
-  ```env
-  VITE_OXR_BASE_URL=https://openexchangerates.org/api
-  VITE_OXR_API_KEY=your_openexchangerates_api_key
-  ```
+### Historical Data (Last 30 Days)
 
-  Replace `your_openexchangerates_api_key` with your actual API key from Open Exchange Rates.
+- Uses [RapidAPI Currency Conversion and Exchange Rates API](https://rapidapi.com/principalapis/api/currency-conversion-and-exchange-rates/playground/endpoint_01c2f371-2ab0-4e56-98f4-e4f4149e9cfc) to fetch exchange rate history.
+- **API Key Required:**
+You must create a `.env` file in the project root with your API credentials:
+```env
+VITE_HISTORY_CURRENCY_BASE_URL=https://currency-conversion-and-exchange-rates.p.rapidapi.com
+VITE_HISTORY_CURRENCY_API_KEY=your_rapid_api_key
+```
+Replace `your_rapid_api_key` with your actual API key from RapidAPI.
 
 ## License
 
