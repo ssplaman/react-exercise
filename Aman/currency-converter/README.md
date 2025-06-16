@@ -22,7 +22,7 @@ A modern currency converter built with **React**, **TypeScript**, **Redux**, and
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Vite](https://vitejs.dev/) (for fast development)
 - [Axios](https://axios-http.com/) (for API requests)
-- [Chart.js](https://www.chartjs.org/) or [Recharts](https://recharts.org/) (used for rendering the historical graph)
+- [CanvasJS](https://canvasjs.com/) (used for rendering the historical graph)
 
 ## Getting Started
 
