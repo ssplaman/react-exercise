@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 
 import styles from '../css/movieGallery.module.css';
@@ -11,6 +11,8 @@ import ImageModal from "../components/ImageModal";
 import { fetchMediaImages } from "../api";
 
 const MovieGallery = () => {
+    const navigate = useNavigate();
+
     const { mediaType, id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [galleryImages, setGalleryImages] = useState([]);
@@ -58,6 +60,13 @@ const MovieGallery = () => {
         <Loader />
     ) : (
         <div className={styles["gallery-wrapper"]}>
+            <button
+                className={styles["back-button"]}
+                onClick={() => navigate(-1)}
+            >
+                ⬅ Back
+            </button>
+
             {galleryImages && galleryImages.length > 0 ? (
                 <>
                     <div className={styles.gallery} id="gallery">

@@ -22,16 +22,14 @@ const Header = ({ searchTerm, onSearch,
 
     return (
         <>
-            <header>
-                <h1>🎬 Library</h1>
-            </header>
             <div className="media-type">
                 <form className="search-bar" onSubmit={handleSearchSubmit}>
                     <input
                         type="text"
                         placeholder="Search..."
                         onChange={(e) => setInput(e.target.value)}
-                        disabled={isSearchDisabled} />
+                        disabled={isSearchDisabled}
+                        value={searchTerm} />
                     <button type="submit" disabled={isSearchDisabled}>Search</button>
                 </form>
 

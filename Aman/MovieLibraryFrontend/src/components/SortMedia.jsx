@@ -42,7 +42,7 @@ const SortMedia = ({ disabled }) => {
                 disabled={disabled}
             >
                 <option value="">
-                    Reset Sort
+                    Select Sort
                 </option>
                 {genres.map((option) => (
                     <option key={option.id} value={option.id}>

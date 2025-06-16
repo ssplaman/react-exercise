@@ -180,6 +180,22 @@
     right: 20px;
 }
 
+.back-button {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 /* 💻 Laptops and Desktops (1025px and above) */
 @media (min-width: 1025px) {
     .gallery {

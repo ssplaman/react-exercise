@@ -27,7 +27,7 @@ const SimilarMovies = () => {
         setFetchError("");
 
         const response = await fetchSimilarMediaList(mediaType, movieId, pageNumber);
-        
+
         if (response.status === 200) {
             // setSimilarMovies(response.data.results);
             // setTotalPage(response.data.total_pages);
@@ -68,6 +68,12 @@ const SimilarMovies = () => {
     ) : (
         <>
             <div className={styles["gallery-wrapper"]}>
+                <button
+                    className={styles["back-button"]}
+                    onClick={() => navigate(-1)}
+                >
+                    ⬅ Back
+                </button>
                 {similarMovies && similarMovies.length > 0 ? (
                     <div className={styles.gallery} id="gallery">
                         {similarMovies.map((item) => (

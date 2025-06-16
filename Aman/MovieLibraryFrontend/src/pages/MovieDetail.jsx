@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 
 import styles from "../css/movieDetail.module.css";
@@ -12,6 +12,7 @@ import { fetchMediaDetail, fetchMediaTrailer } from "../api.jsx";
 import { envVar } from "../utils/env-var";
 
 const MovieDetail = () => {
+    const navigate = useNavigate();
     const { mediaType, id } = useParams();
 
     const [mediaDetail, setMediaDetail] = useState(null);
@@ -86,6 +87,12 @@ const MovieDetail = () => {
                 </div>
 
                 <div className={styles.description}>
+                    <button
+                        onClick={() => navigate(-1)}
+                        className={styles["back-button"]}
+                    >
+                        ⬅ Back
+                    </button>
                     <div className={styles["movie-content"]}>
                         <img src={`${envVar.tmdbApi.image.baseUrl}/w300${mediaDetail?.poster_path}`} alt="Movie Poster" className={styles["movie-poster-detail-page"]} />
                         <div className={styles["movie-info-detail-page"]}>

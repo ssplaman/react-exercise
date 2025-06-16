@@ -8,11 +8,18 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #121212;
     color: #ffffff;
+    padding-top: 50px;
 }
 
 header {
     text-align: center;
     margin-bottom: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 11;
+    background: #121212;
+    width: 100%;
 }
 
 header h1 {
@@ -282,7 +289,7 @@ header h1 {
     text-align: center;
 }
 
-.genre-sort-dropdowns{
+.genre-sort-dropdowns {
     display: flex;
     justify-content: center;
     align-items: center;

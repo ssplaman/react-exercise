@@ -120,7 +120,7 @@ const MovieContainer = () => {
   return (
     <>
       <Header
-        searchedMedia={searchTerm}
+        searchTerm={searchTerm}
         onSearch={handleSearch}
         mediaType={mediaType}
         onMediaTypeChange={handleMediaTypeChange}
