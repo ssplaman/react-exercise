@@ -148,13 +148,14 @@ const CurrencyConverter = () => {
                 setCurrencies([]);
             }
         };
-
         fetchCountryCurrencies();
     }, []);
 
     const handleSwap = () => {
         dispatch(setFromCurrency(toCurrency));
         dispatch(setToCurrency(fromCurrency));
+        setDataPoints([]);
+        setResult('');
     };
 
     const changeAmount = (val: number) => {
