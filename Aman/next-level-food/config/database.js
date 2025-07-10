@@ -9,8 +9,8 @@ console.log('DB_HOST:', process.env.DB_HOST);
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
-  "sa",
-  "sumedha",
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
     dialect: 'mssql',

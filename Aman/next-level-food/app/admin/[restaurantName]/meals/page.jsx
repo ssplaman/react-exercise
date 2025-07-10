@@ -2,6 +2,7 @@ import Link from 'next/link'
 import classes from './page.module.css'
 import Image from 'next/image'
 import { GetMealsByRestaurantName } from '@/app/api/meal/route'
+import BackButton from '@/_components/backButton/backButton'
 
 const MealsAdmin = async ({ params }) => {
     const restaurantName = params.restaurantName;
@@ -23,6 +24,7 @@ const MealsAdmin = async ({ params }) => {
 
     return (
         <main className={classes.container}>
+            <BackButton />
             <div className={classes.headerRow}>
                 <h1>Meals</h1>
             </div>

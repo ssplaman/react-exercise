@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import SuggestionList from "./suggestionList";
 import dynamic from 'next/dynamic';
-import classes from './photonAutocomplete.module.css'
+import classes from './locationAutocomplete.module.css'
 
 const MapModal = dynamic(() => import('./mapModal'), { ssr: false });
 
 
-const PhotonAutocomplete = ({ onSelect, defaultValue }) => {
+const LocationAutocomplete = ({ onSelect, defaultValue }) => {
     const [inputValue, setInputValue] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [shouldFetch, setShouldFetch] = useState(true);
@@ -32,14 +32,27 @@ const PhotonAutocomplete = ({ onSelect, defaultValue }) => {
             }
 
             try {
-                const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(inputValue)}&limit=4`, { signal: controller.signal });
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(inputValue)}&format=json&limit=5`, { signal: controller.signal });
 
                 const data = await res.json();
 
-                const results = [...new Map(data.features.map(item => [item.properties.name, {
-                    label: item.properties.name,
-                    coordinates: item.geometry.coordinates
-                }])).values()];
+                const results = [
+                    ...new Map(
+                        data.map(item => {
+                            const name = item.display_name;
+                            const lat = parseFloat(item.lat);
+                            const long = parseFloat(item.lon);
+                            const key = `${name}-${lat}-${long}`;
+                            return [
+                                key,
+                                {
+                                    label: name,
+                                    coordinates: [long, lat]
+                                }
+                            ];
+                        })
+                    ).values()
+                ];
 
                 setSuggestions(results);
             } catch (error) {
@@ -114,4 +127,4 @@ const PhotonAutocomplete = ({ onSelect, defaultValue }) => {
     )
 }
 
-export default PhotonAutocomplete
+export default LocationAutocomplete

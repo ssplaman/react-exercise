@@ -5,6 +5,7 @@ import { GetRestaurantBySlug } from '../../api/restaurant/route';
 import { Suspense } from 'react';
 import MealsLoadingPage from '../loading-out';
 import MealsSlugGrid from '@/_components/mealSlug/meals-slug-grid';
+import BackButton from '@/_components/backButton/backButton';
 
 const Slug = async ({ params }) => {
     const { restaurantSlug } = await params;
@@ -16,6 +17,7 @@ const Slug = async ({ params }) => {
 
     return (
         <main className={classes.container}>
+            <BackButton />
             <header className={classes.header}>
                 <div className={classes.image}>
                     <Image src={restaurant.image} alt={restaurant.name} width={140} height={140} />

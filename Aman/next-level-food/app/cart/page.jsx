@@ -3,18 +3,23 @@
 import Image from 'next/image';
 import classes from './page.module.css';
 import { useCart } from '@/_components/cart/cart-context';
+import BackButton from '@/_components/backButton/backButton';
 
 const Cart = () => {
     const { cartItems, addItem, removeItem, subtotal, tax, total, clearCart } = useCart();
 
     if (cartItems.length === 0) return (
-        <main className="not-found">
-            <p>Your cart is empty.</p>
-        </main>
+        <>
+            <BackButton />
+            <main className="not-found">
+                <p>Your cart is empty.</p>
+            </main>
+        </>
     )
 
     return (
         <div className={classes["cart-container"]}>
+            <BackButton />
             <h2>Cart</h2>
             {cartItems.map(item => (
                 <div key={item.id} className={classes["cart-item"]}>
@@ -31,13 +36,13 @@ const Cart = () => {
                 </div>
             ))}
 
-            <div style={{ marginTop: '2rem', borderTop: '1px solid #444', paddingTop: '1rem' }}>
+            <div className={classes["cart-total"]}>
                 <p>Subtotal: {subtotal.toFixed(2)}</p>
                 <p>Tax (10%): {tax.toFixed(2)}</p>
                 <p><strong>Total: {total.toFixed(2)}</strong></p>
-                <button onClick={clearCart} style={{ marginTop: '1rem', backgroundColor: '#ff4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '5px' }}>Clear Cart</button>
+                <button className={classes["clear-cart"]} onClick={clearCart}>Clear Cart</button>
             </div>
-        </div >
+        </div>
     )
 }
 

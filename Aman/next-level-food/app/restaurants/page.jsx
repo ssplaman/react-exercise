@@ -3,6 +3,7 @@ import classes from './page.module.css';
 import RestaurantGrid from '@/_components/restaurant/restaurant-grid';
 import MealsLoadingPage from './loading-out';
 import { Suspense } from 'react';
+import BackButton from '@/_components/backButton/backButton';
 
 const RestaurantPage = async () => {
   try {
@@ -20,6 +21,7 @@ const Restaurant = () => {
   return (
     <>
       <header className={classes.header}>
+        <BackButton />
         <h1>
           Discover restaurants <span className={classes.highlight}>near you</span>
         </h1>

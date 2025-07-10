@@ -5,6 +5,7 @@ import { GetMeals } from '../api/meal/route'
 import { Suspense } from 'react'
 import MealsLoadingPage from '../restaurants/loading-out'
 import { notFound } from 'next/navigation'
+import BackButton from '@/_components/backButton/backButton'
 
 const MealsPage = async () => {
     const meals = await GetMeals();
@@ -19,6 +20,7 @@ const Meals = () => {
     return (
         <>
             <header className={classes.header}>
+                <BackButton />
                 <h1>
                     Discover delicious meals <span className={classes.highlight}>near you</span>
                 </h1>

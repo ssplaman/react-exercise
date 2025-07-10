@@ -5,7 +5,8 @@ import classes from './page.module.css'
 import { addRestaurant, updateRestaurant } from '@/lib/actions'
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import PhotonAutocomplete from '@/_components/add-restaurant/photonAutocomplete';
+import LocationAutocomplete from '@/_components/add-restaurant/locationAutocomplete';
+import BackButton from '@/_components/backButton/backButton';
 
 const Share = () => {
     const [state, formAction] = React.useActionState(addRestaurant, { message: null });
@@ -51,6 +52,7 @@ const Share = () => {
     return (
         <>
             <header className={classes.header}>
+                <BackButton />
                 <h1>
                     {restaurantName ? 'Edit' : 'Add'} <span className={classes.highlight}>restaurant</span>
                 </h1>
@@ -74,7 +76,7 @@ const Share = () => {
                         </div>
                         <div>
                             <label htmlFor="location">Location</label>
-                            <PhotonAutocomplete onSelect={(location) => setSelectedLocation(location)} defaultValue={formData?.location || ''} />
+                            <LocationAutocomplete onSelect={(location) => setSelectedLocation(location)} defaultValue={formData?.location || ''} />
                             {selectedLocation && (
                                 <>
                                     <input type="hidden" name="location" value={selectedLocation.label} />

@@ -5,6 +5,7 @@ import classes from './page.module.css'
 import { updateMeal } from '@/lib/actions'
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import BackButton from '@/_components/backButton/backButton';
 
 const AddMeal = () => {
     const [state, formAction] = React.useActionState(updateMeal, { message: null });
@@ -50,6 +51,7 @@ const AddMeal = () => {
     return (
         <>
             <header className={classes.header}>
+                <BackButton />
                 <h1>
                     Edit your <span className={classes.highlight}>meal</span>
                 </h1>

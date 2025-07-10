@@ -3,6 +3,7 @@ import classes from './page.module.css'
 import { notFound } from 'next/navigation';
 import { GetRestaurantBySlug } from '../../api/restaurant/route';
 import Link from 'next/link';
+import BackButton from '@/_components/backButton/backButton';
 
 const Restaurant = async ({ params }) => {
     const { restaurantName } = await params;
@@ -14,6 +15,7 @@ const Restaurant = async ({ params }) => {
 
     return (
         <main className={classes.container}>
+            <BackButton />
             <header className={classes.header}>
                 <div className={classes.image}>
                     <Image src={restaurant.image} alt={restaurant.name} width={140} height={140} />

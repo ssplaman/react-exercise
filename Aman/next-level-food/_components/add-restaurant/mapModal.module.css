@@ -11,17 +11,24 @@
     z-index: 1000;
 }
 
-.map-section{
+.map-section {
     width: 80%;
     height: 80%;
     background: #fff;
     padding: 1rem;
     position: relative;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
 }
 
 .map {
+    flex: 1 1 auto;
     width: 100%;
-    height: 70%;
+    min-height: 300px;
+    pointer-events: auto;
+    z-index: 1001;
+    position: relative;
 }
 
 .location-label {

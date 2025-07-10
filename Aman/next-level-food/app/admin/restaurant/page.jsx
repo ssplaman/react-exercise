@@ -2,6 +2,7 @@ import Link from 'next/link'
 import classes from './page.module.css'
 import Image from 'next/image'
 import { GetRestaurantNameAndImage } from '@/app/api/restaurant/route'
+import BackButton from '@/_components/backButton/backButton'
 
 const RestaurantAdmin = async () => {
     let mockRestaurants;
@@ -16,6 +17,7 @@ const RestaurantAdmin = async () => {
 
     return (
         <main className={classes.container}>
+            <BackButton />
             <div className={classes.headerRow}>
                 <h1>Restaurants</h1>
                 <div className={classes.buttonGroup}>

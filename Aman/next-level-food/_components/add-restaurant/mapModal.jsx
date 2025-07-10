@@ -1,8 +1,9 @@
 'use client';
 
-import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import React, { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
+import React, { useEffect, useState } from 'react';
 import classes from './mapModal.module.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -12,38 +13,43 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const MapModal = ({ onClose, onSave }) => {
-    const mapRef = useRef(null);
-    const mapContainerRef = useRef(null);
-    const markerRef = useRef(null);
+function LocationMarker({ selectedCoords, setSelectedCoords }) {
+    useMapEvents({
+        click(e) {
+            setSelectedCoords(e.latlng);
+        },
+    });
 
+    return selectedCoords ? <Marker position={selectedCoords} /> : null;
+}
+
+const MapModal = ({ onClose, onSave }) => {
     const [locationLabel, setLocationLabel] = useState('');
     const [selectedCoords, setSelectedCoords] = useState(null);
+    const [initialPosition, setInitialPosition] = useState(null);
 
     useEffect(() => {
-        if (mapRef.current) return;
-        const defaultCoords = { lat: 26.9267, lng: 75.8096 };
-
-        mapRef.current = L.map(mapContainerRef.current).setView([defaultCoords.lat, defaultCoords.lng], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(mapRef.current);
-
-        markerRef.current = L.marker([defaultCoords.lat, defaultCoords.lng]).addTo(mapRef.current);
-
-        setSelectedCoords(defaultCoords);
-
-        mapRef.current.on('click', (e) => {
-            const { lat, lng } = e.latlng;
-            setSelectedCoords({ lat, lng });
-
-            if (markerRef.current) {
-                markerRef.current.setLatLng([lat, lng]);
-            } else {
-                markerRef.current = L.marker([lat, lng]).addTo(mapRef.current);
-            }
-        });
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const coords = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                    };
+                    setInitialPosition(coords);
+                    setSelectedCoords(coords);
+                },
+                () => {
+                    const fallback = { lat: 28.6139, lng: 77.2090 };
+                    setInitialPosition(fallback);
+                    setSelectedCoords(fallback);
+                }
+            );
+        } else {
+            const fallback = { lat: 28.6139, lng: 77.2090 };
+            setInitialPosition(fallback);
+            setSelectedCoords(fallback);
+        }
     }, []);
 
     const handleSave = () => {
@@ -56,21 +62,39 @@ const MapModal = ({ onClose, onSave }) => {
         }
     };
 
+    if (!initialPosition) return null;
+
     return (
-        <div className={classes["map-overlay"]}
-    onClick={onClose}>
-            <div className={classes["map-section"]}
-                onClick={(e) => e.stopPropagation()}>
-                <div className={classes.map} ref={mapContainerRef} />
+        <div className={classes['map-overlay']} onClick={onClose}>
+            <div className={classes['map-section']} onClick={(e) => e.stopPropagation()}>
+                <MapContainer
+                    center={initialPosition}
+                    zoom={17}
+                    scrollWheelZoom={true}
+                    style={{ height: '400px', width: '100%' }}
+                    className={classes.map}
+                >
+                    <TileLayer 
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    />
+                    <LocationMarker
+                        selectedCoords={selectedCoords}
+                        setSelectedCoords={setSelectedCoords}
+                    />
+                </MapContainer>
+
                 <input
-                    className={classes["location-label"]}
+                    className={classes['location-label']}
                     type="text"
                     placeholder="Enter location label"
                     value={locationLabel}
                     onChange={(e) => setLocationLabel(e.target.value)}
                     required
                 />
-                <button onClick={handleSave} className={classes["location-save"]}>Save Location</button>
+                <button onClick={handleSave} className={classes['location-save']}>
+                    Save Location
+                </button>
             </div>
         </div>
     )

@@ -5,7 +5,8 @@ import classes from './page.module.css'
 import { addRestaurant } from '@/lib/actions'
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import PhotonAutocomplete from '@/_components/add-restaurant/photonAutocomplete';
+import LocationAutocomplete from '@/_components/add-restaurant/locationAutocomplete';
+import BackButton from '@/_components/backButton/backButton';
 
 const AddRestaurant = () => {
     const [state, formAction] = React.useActionState(addRestaurant, { message: null });
@@ -23,6 +24,7 @@ const AddRestaurant = () => {
     return (
         <>
             <header className={classes.header}>
+                <BackButton />
                 <h1>
                     Add <span className={classes.highlight}>restaurant</span>
                 </h1>
@@ -42,7 +44,7 @@ const AddRestaurant = () => {
                     </div>
                     <div>
                             <label htmlFor="location">Location</label>
-                            <PhotonAutocomplete onSelect={(location) => setSelectedLocation(location)} />
+                            <LocationAutocomplete onSelect={(location) => setSelectedLocation(location)} />
                             {selectedLocation && (
                                 <>
                                     <input type="hidden" name="location" value={selectedLocation.label} />
