@@ -4,7 +4,7 @@ import ImagePicker from '@/_components/meals/image-picker'
 import classes from './page.module.css'
 import { addRestaurant } from '@/lib/actions'
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import LocationAutocomplete from '@/_components/add-restaurant/locationAutocomplete';
 import BackButton from '@/_components/backButton/backButton';
 
@@ -13,11 +13,10 @@ const AddRestaurant = () => {
     const [selectedLocation, setSelectedLocation] = useState(null);
 
     const router = useRouter();
-    const { restaurantName } = useParams();
 
     useEffect(() => {
         if (state.message === "Restaurant saved successfully!") {
-            router.push(`/admin/${restaurantName}`);
+            router.push(`/`);
         }
     }, [state.message, router]);
 

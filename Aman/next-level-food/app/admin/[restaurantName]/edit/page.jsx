@@ -76,15 +76,14 @@ const Share = () => {
                         </div>
                         <div>
                             <label htmlFor="location">Location</label>
-                            <LocationAutocomplete onSelect={(location) => setSelectedLocation(location)} defaultValue={formData?.location || ''} />
-                            {selectedLocation && (
+                            <LocationAutocomplete onSelect={(location) => setSelectedLocation(location)} defaultValue={formData?.location || ''} lat={formData?.lat || ''} lng={formData?.lng || ''} />
+                            {selectedLocation || (formData?.location && formData?.lat && formData?.lng) && (
                                 <>
-                                    <input type="hidden" name="location" value={selectedLocation.label} />
-                                    <input type="hidden" name="lat" value={selectedLocation.coordinates[1]} />
-                                    <input type="hidden" name="lng" value={selectedLocation.coordinates[0]} />
+                                    <input type="hidden" name="location" value={selectedLocation?.label ?? formData?.location} />
+                                    <input type="hidden" name="lat" value={selectedLocation?.coordinates[1] ?? formData?.lat} />
+                                    <input type="hidden" name="lng" value={selectedLocation?.coordinates[0] ?? formData?.lng} />
                                 </>
                             )}
-                            {/* <input type="text" id="location" name="location" defaultValue={formData?.location || ''} required /> */}
                         </div>
                         <p>
                             <label htmlFor="description">Description</label>

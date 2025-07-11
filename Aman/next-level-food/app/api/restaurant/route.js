@@ -10,7 +10,7 @@ export const InsertRestaurant = async (restaurantData) => {
     try {
         await sequelize.authenticate();
 
-        await Restaurant.sync();
+        // await Restaurant.sync({ alter: true });
 
         const existingRestaurant = await Restaurant.findOne({
             where: {
@@ -28,6 +28,8 @@ export const InsertRestaurant = async (restaurantData) => {
             image: restaurantData.image,
             description: restaurantData.description,
             location: restaurantData.location,
+            lat: restaurantData.lat,
+            lng: restaurantData.lng,
             rating: restaurantData.rating
         });
 
@@ -44,23 +46,25 @@ export const GetRestaurantBySlug = async (resturantName) => {
 
         const [rows] = await sequelize.query(`
             SELECT
-                r.id, r.name, r.email, r.image, r.description, r.location, r.rating, re.id AS recipeId, re.title AS recipeTitle, re.summary AS recipeSummary, re.image AS recipeImage, re.price AS recipePrice
+                r.id, r.name, r.email, r.image, r.description, r.location, r.lat, r.lng, r.rating, re.id AS recipeId, re.title AS recipeTitle, re.summary AS recipeSummary, re.image AS recipeImage, re.price AS recipePrice
             FROM restaurant r
-            INNER JOIN recipe re ON re.restaurant_id = r.id
+            LEFT OUTER JOIN recipe re ON re.restaurant_id = r.id
             WHERE LOWER(REPLACE(REPLACE(REPLACE(r.name, ' ', '-'), '''', ''), '&', '')) = ?
             `, { replacements: [resturantName] });
 
         if (rows.length === 0) return null;
 
-        const { id, name, email, image, description, location, rating } = rows[0]
+        const { id, name, email, image, description, location, lat, lng, rating } = rows[0]
 
-        const recipes = rows.map(row => ({
-            id: row.recipeId,
-            title: row.recipeTitle,
-            summary: row.recipeSummary,
-            image: row.recipeImage,
-            price: row.recipePrice
-        }));
+        const recipes = rows
+            .filter(row => row.recipeId !== null)
+            .map(row => ({
+                id: row.recipeId,
+                title: row.recipeTitle,
+                summary: row.recipeSummary,
+                image: row.recipeImage,
+                price: row.recipePrice
+            }));
 
         return {
             id,
@@ -69,6 +73,8 @@ export const GetRestaurantBySlug = async (resturantName) => {
             image,
             description,
             location,
+            lat,
+            lng,
             rating,
             recipes
         };
@@ -97,6 +103,8 @@ export const UpdateRestaurant = async (restaurantData) => {
     try {
         await sequelize.authenticate();
 
+        // await Restaurant.sync({ alter: true });
+
         const [affectedCount] = await Restaurant.update(
             {
                 name: restaurantData.name,
@@ -104,6 +112,8 @@ export const UpdateRestaurant = async (restaurantData) => {
                 image: restaurantData.image,
                 description: restaurantData.description,
                 location: restaurantData.location,
+                lat: restaurantData.lat,
+                lng: restaurantData.lng,
                 rating: restaurantData.rating
             },
             {

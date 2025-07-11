@@ -15,6 +15,8 @@ export const addRestaurant = async (prevState, formData) => {
         name: formData.get('name'),
         email: formData.get('email'),
         location: formData.get('location'),
+        lat: formData.get('lat'),
+        lng: formData.get('lng'),
         description: formData.get('description'),
         rating: formData.get('rating'),
         image: formData.get('image')
@@ -23,6 +25,7 @@ export const addRestaurant = async (prevState, formData) => {
     if (isInvalidText(restaurant.name)) return { message: "Restaurant Name is required." };
     if (isInvalidText(restaurant.email) || !restaurant.email.includes('@')) return { message: "Valid email is required." };
     if (isInvalidText(restaurant.location)) return { message: "Location is required." };
+    if (isInvalidText(restaurant.lat) || isInvalidText(restaurant.lng)) return { message: "Valid coordinates are required." };
     if (isInvalidText(restaurant.description)) return { message: "Description is required." };
     if (isInvalidText(restaurant.rating)) return { message: "Rating is required." };
     if (!restaurant.image || restaurant.image.size === 0) return { message: "Image is required." };
@@ -55,6 +58,8 @@ export const updateRestaurant = async (prevState, formData) => {
         name: formData.get('name'),
         email: formData.get('email'),
         location: formData.get('location'),
+        lat: formData.get('lat'),
+        lng: formData.get('lng'),
         description: formData.get('description'),
         rating: formData.get('rating'),
         image: formData.get('existingImage')
@@ -66,6 +71,7 @@ export const updateRestaurant = async (prevState, formData) => {
     if (isInvalidText(restaurant.name)) return { message: "Restaurant Name is required." };
     if (isInvalidText(restaurant.email) || !restaurant.email.includes('@')) return { message: "Valid email is required." };
     if (isInvalidText(restaurant.location)) return { message: "Location is required." };
+    if (isInvalidText(restaurant.lat) || isInvalidText(restaurant.lng)) return { message: "Valid coordinates are required." };
     if (isInvalidText(restaurant.description)) return { message: "Description is required." };
     if (isInvalidText(restaurant.rating)) return { message: "Rating is required." };
 

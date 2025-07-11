@@ -23,12 +23,20 @@ function LocationMarker({ selectedCoords, setSelectedCoords }) {
     return selectedCoords ? <Marker position={selectedCoords} /> : null;
 }
 
-const MapModal = ({ onClose, onSave }) => {
+const MapModal = ({ onClose, onSave, defaultLat, defaultLng, defaultLabel }) => {
     const [locationLabel, setLocationLabel] = useState('');
     const [selectedCoords, setSelectedCoords] = useState(null);
     const [initialPosition, setInitialPosition] = useState(null);
 
     useEffect(() => {
+        if (defaultLat && defaultLng) {
+            const coords = { lat: defaultLat, lng: defaultLng };
+            setInitialPosition(coords);
+            setSelectedCoords(coords);
+            if (defaultLabel) setLocationLabel(defaultLabel);
+            return;
+        }
+
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
@@ -50,13 +58,15 @@ const MapModal = ({ onClose, onSave }) => {
             setInitialPosition(fallback);
             setSelectedCoords(fallback);
         }
-    }, []);
+    }, [defaultLat, defaultLng, defaultLabel]);
 
     const handleSave = () => {
         if (selectedCoords && locationLabel.trim()) {
             onSave({
                 label: locationLabel,
                 coordinates: [selectedCoords.lng, selectedCoords.lat],
+                lat: selectedCoords.lat,
+                lng: selectedCoords.lng
             });
             onClose();
         }
@@ -74,7 +84,7 @@ const MapModal = ({ onClose, onSave }) => {
                     style={{ height: '400px', width: '100%' }}
                     className={classes.map}
                 >
-                    <TileLayer 
+                    <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     />

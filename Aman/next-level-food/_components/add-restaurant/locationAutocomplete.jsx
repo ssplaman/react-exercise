@@ -8,12 +8,13 @@ import classes from './locationAutocomplete.module.css'
 const MapModal = dynamic(() => import('./mapModal'), { ssr: false });
 
 
-const LocationAutocomplete = ({ onSelect, defaultValue }) => {
+const LocationAutocomplete = ({ onSelect, defaultValue, lat, lng }) => {
     const [inputValue, setInputValue] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [shouldFetch, setShouldFetch] = useState(true);
     const [showMap, setShowMap] = useState(false);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
@@ -31,6 +32,7 @@ const LocationAutocomplete = ({ onSelect, defaultValue }) => {
                 return;
             }
 
+            setLoading(true);
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(inputValue)}&format=json&limit=5`, { signal: controller.signal });
 
@@ -59,6 +61,8 @@ const LocationAutocomplete = ({ onSelect, defaultValue }) => {
                 if (error.name !== 'AbortError') {
                     console.error('Error fetching suggestions: ', error);
                 }
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -114,6 +118,7 @@ const LocationAutocomplete = ({ onSelect, defaultValue }) => {
                     onSelect={handleSelect}
                     onMapSelect={handleMapConfirm}
                     showFallback={inputValue.length >= 3 && suggestions.length === 0}
+                    loading={loading}
                 />
             )}
 
@@ -121,6 +126,9 @@ const LocationAutocomplete = ({ onSelect, defaultValue }) => {
                 <MapModal
                     onClose={() => setShowMap(false)}
                     onSave={handleMapSave}
+                    defaultLat={lat}
+                    defaultLng={lng}
+                    defaultLabel={defaultValue}
                 />
             )}
         </div>
