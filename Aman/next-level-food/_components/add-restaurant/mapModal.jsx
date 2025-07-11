@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import React, { useEffect, useState } from 'react';
 import classes from './mapModal.module.css';
+import GeocoderControl from './geoCoderControl';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -92,6 +93,8 @@ const MapModal = ({ onClose, onSave, defaultLat, defaultLng, defaultLabel }) => 
                         selectedCoords={selectedCoords}
                         setSelectedCoords={setSelectedCoords}
                     />
+
+                    <GeocoderControl setSelectedCoords={setSelectedCoords} />
                 </MapContainer>
 
                 <input
